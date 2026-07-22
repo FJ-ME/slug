@@ -18,8 +18,8 @@ export const env = createEnv({
     //AUTH_URL: z.string(),
     GITHUB_ID: z.string(),
     GITHUB_CLIENT_SECRET: z.string(),
-    GOOGLE_ID: z.string(),
-    GOOGLE_CLIENT_SECRET: z.string(),
+    GOOGLE_ID: z.string().optional(),
+    GOOGLE_CLIENT_SECRET: z.string().optional(),
   },
   runtimeEnv: {
     TURSO_DATABASE_URL: process.env.TURSO_DATABASE_URL,
