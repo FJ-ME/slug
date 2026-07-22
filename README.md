@@ -105,10 +105,6 @@ AUTH_SECRET=
 # Github Provider =>
 GITHUB_ID=
 GITHUB_CLIENT_SECRET=
-
-# Google Provider =>
-GOOGLE_CLIENT_ID=
-GOOGLE_CLIENT_SECRET=
 ```
 
 **Database:**
