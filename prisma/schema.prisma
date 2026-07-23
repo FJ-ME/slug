@@ -4,8 +4,9 @@ generator client {
 }
 
 datasource db {
-    provider = "sqlite"
-    url      = env("DATABASE_URL")
+    provider  = "sqlite"
+    url       = "file:./dev.db"
+    directUrl = env("DATABASE_URL")
 }
 
 model Links {
