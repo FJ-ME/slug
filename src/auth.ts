@@ -34,6 +34,10 @@ export const {
   },
   callbacks: {
     async signIn({ user, account }) {
+      // 白名单验证（对所有登录方式生效）
+      const isAllowed = await checkAllowedEmail(user.email!);
+      if (!isAllowed) return false;
+      
       // Allow OAuth without email verification
       if (account?.provider !== "credentials") return true;
 
