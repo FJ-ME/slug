@@ -37,7 +37,9 @@ export const {
       // If provider is github, try to fetch verified/primary email via GitHub API
       if (account?.provider === "github") {
         try {
-          const token = (account as any).access_token as string | undefined;
+          // account may include access_token when using OAuth
+          const acct = account as { access_token?: string } | undefined;
+          const token = acct?.access_token;
           if (token) {
             const resp = await fetch("https://api.github.com/user/emails", {
               headers: {
@@ -46,10 +48,16 @@ export const {
               },
             });
             if (resp.ok) {
-              const emails = await resp.json();
+              const emails = (await resp.json()) as Array<{
+                email: string;
+                primary?: boolean;
+                verified?: boolean;
+                visibility?: string | null;
+              }>;
               // emails is an array of { email, primary, verified, visibility }
-              const primary = emails.find((e: any) => e.primary && e.verified)?.email
-                || emails.find((e: any) => e.verified)?.email;
+              const primary =
+                emails.find((e) => e.primary && e.verified)?.email ||
+                emails.find((e) => e.verified)?.email;
               if (primary) {
                 // override user.email so subsequent checks use the verified primary email
                 user.email = primary;
