@@ -9,6 +9,14 @@ import { getTwoFactorConfirmationByUserId } from "./server/utils/two-factor-conf
 import { getAccountByUserId } from "./server/utils/account";
 import { env } from "./env.mjs";
 
+// Debug: log whether required env vars are present at runtime (do not log their values)
+console.log("AUTH ENV CHECK", {
+  hasGithubId: !!process.env.GITHUB_ID,
+  hasGithubSecret: !!process.env.GITHUB_CLIENT_SECRET,
+  hasAuthSecret: !!process.env.AUTH_SECRET,
+  hasNextAuthUrl: !!process.env.NEXTAUTH_URL,
+});
+
 export const {
   handlers: { GET, POST },
   auth,
