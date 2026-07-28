@@ -56,7 +56,7 @@ export const {
               }>;
               // emails is an array of { email, primary, verified, visibility }
               const primary =
-                emails.find((e) => e.primary && e.verified)?.email ||
+                emails.find((e) => e.primary && e.verified)?.email ??
                 emails.find((e) => e.verified)?.email;
               if (primary) {
                 // override user.email so subsequent checks use the verified primary email
