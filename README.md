@@ -95,7 +95,7 @@ pnpm install
 
 ```bash
 # Database:
-DATABASE_URL= # "file:./dev.db"
+DATABASE_URL= # "file:./dev.db" (optional for Vercel/Turso production)
 TURSO_DATABASE_URL=
 TURSO_AUTH_TOKEN=
 
