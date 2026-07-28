@@ -132,11 +132,17 @@ GITHUB_CLIENT_SECRET=
 pnpm db:migrate
 ```
 
-6. Insert the migration data into the Turso database. To do this, go to ``package.json``, modify the ``db:push`` command with the name of the migration folder (2024***xxxxxxxxxx***_init) and run it in your terminal:
+6. Insert the migration data into the Turso database. The local sync script will use the migration folder from the command and your Turso environment variables:
 
 ```bash
+export TURSO_API_TOKEN=your-token
+export TURSO_DATABASE_URL=libsql://your-db.turso.io
+export TURSO_DATABASE_NAME=your-db
+export TURSO_AUTH_TOKEN=your-token
 pnpm db:push
 ```
+
+For Vercel production, make sure the same Turso variables are configured in the project environment settings so the app connects to Turso in production.
 
 7. Run:
 

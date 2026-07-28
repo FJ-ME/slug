@@ -9,8 +9,8 @@ export const env = createEnv({
         (str) => !str.includes("YOUR_MYSQL_URL_HERE"),
         "You forgot to change the default URL",
       ),
-    TURSO_DATABASE_URL: z.string(),
-    TURSO_AUTH_TOKEN: z.string(),
+    TURSO_DATABASE_URL: z.string().optional(),
+    TURSO_AUTH_TOKEN: z.string().optional(),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),

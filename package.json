@@ -17,9 +17,9 @@
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev --name init",
     "db:studio": "prisma studio",
-    "db:push": "turso db shell slug < ./prisma/migrations/20260726082533_init/migration.sql --location=nrt",
+    "db:push": "node ./scripts/sync-turso-db.mjs 20260726082533_init",
     "db:pscale:dump": "pscale database dump databasename databasebranch",
-    "db:turso:dump": "turso db shell slug-vercel .dump > dump.sql --location=nrt"
+    "db:turso:dump": "turso db shell $(node -e \"const u=process.env.TURSO_DATABASE_URL||''; const h=u.match(/https?:\\/\\/([^/]+)/); console.log(h? h[1].replace(/\\.turso\\.io$/, '') : '');\") .dump > dump.sql"
   },
   "dependencies": {
     "@auth/core": "0.30.0",
