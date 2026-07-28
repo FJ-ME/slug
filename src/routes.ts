@@ -3,7 +3,7 @@
  * 🔓 Not required for authentication.
  * @type {string[]}
  */
-export const publicRoutes = ["/", "/docs", "verify", "/check"];
+export const publicRoutes = ["/", "/docs", "/verify", "/check"];
 
 /**
  * 🌱 These routes are used for authentication.
@@ -13,7 +13,7 @@ export const publicRoutes = ["/", "/docs", "verify", "/check"];
 export const authRoutes = [
   "/auth",
   "/register",
-  "/auth-error",
+  "/auth/error",
   "/verify",
   "/reset",
   "/new-password",
