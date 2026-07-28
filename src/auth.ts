@@ -34,7 +34,36 @@ export const {
   },
   callbacks: {
     async signIn({ user, account }) {
-      // Allow OAuth (non-credentials) sign-ins without local whitelist/verification checks
+      // If provider is github, try to fetch verified/primary email via GitHub API
+      if (account?.provider === "github") {
+        try {
+          const token = (account as any).access_token as string | undefined;
+          if (token) {
+            const resp = await fetch("https://api.github.com/user/emails", {
+              headers: {
+                Authorization: `token ${token}`,
+                Accept: "application/vnd.github+json",
+              },
+            });
+            if (resp.ok) {
+              const emails = await resp.json();
+              // emails is an array of { email, primary, verified, visibility }
+              const primary = emails.find((e: any) => e.primary && e.verified)?.email
+                || emails.find((e: any) => e.verified)?.email;
+              if (primary) {
+                // override user.email so subsequent checks use the verified primary email
+                user.email = primary;
+              }
+            } else {
+              console.error("Failed to fetch GitHub emails", await resp.text());
+            }
+          }
+        } catch (err) {
+          console.error("Error fetching github emails in signIn callback", err);
+        }
+      }
+
+      // Allow OAuth (non-credentials) sign-ins without local credentials-only whitelist/verification checks
       if (account?.provider !== "credentials") return true;
 
       // 白名单验证（仅对 credentials 登录方式生效）
