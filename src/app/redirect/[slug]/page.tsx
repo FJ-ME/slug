@@ -17,7 +17,8 @@ const Redirect = async ({ params }: { params: { slug: string } }) => {
     return notFound();
   }
 
-  const enableRedirect = (process.env.ENABLE_REDIRECT || "false").toLowerCase() === "true";
+  // use nullish coalescing to satisfy ESLint rule
+  const enableRedirect = (process.env.ENABLE_REDIRECT ?? "false").toLowerCase() === "true";
 
   if (enableRedirect && getDataApi.url) {
     redirect(getDataApi.url);
