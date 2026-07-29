@@ -25,6 +25,16 @@ export const {
     error: "/auth/error",
   },
   events: {
+    async createUser({ user }) {
+      try {
+        await db.user.update({
+          where: { id: user.id },
+          data: { limitLinks: 0 },
+        });
+      } catch (e) {
+        console.error("Failed to set default limitLinks for new user", e);
+      }
+    },
     async linkAccount({ user }) {
       await db.user.update({
         where: { id: user.id },
