@@ -34,12 +34,52 @@ export const {
   },
   callbacks: {
     async signIn({ user, account }) {
-      // 白名单验证（对所有登录方式生效）
-      const isAllowed = await checkAllowedEmail(user.email!);
-      if (!isAllowed) return false;
-      
-      // Allow OAuth without email verification
-      if (account?.provider !== "credentials") return true;
+      // If provider is github, try to fetch verified/primary email via GitHub API
+      if (account?.provider === "github") {
+        try {
+          // account may include access_token when using OAuth
+          const acct = account as { access_token?: string } | undefined;
+          const token = acct?.access_token;
+          if (token) {
+            const resp = await fetch("https://api.github.com/user/emails", {
+              headers: {
+                Authorization: `token ${token}`,
+                Accept: "application/vnd.github+json",
+              },
+            });
+            if (resp.ok) {
+              const emails = (await resp.json()) as Array<{
+                email: string;
+                primary?: boolean;
+                verified?: boolean;
+                visibility?: string | null;
+              }>;
+              // emails is an array of { email, primary, verified, visibility }
+              const primary =
+                emails.find((e) => e.primary && e.verified)?.email ??
+                emails.find((e) => e.verified)?.email;
+              if (primary) {
+                // override user.email so subsequent checks use the verified primary email
+                user.email = primary;
+              }
+            } else {
+              console.error("Failed to fetch GitHub emails", await resp.text());
+            }
+          }
+        } catch (err) {
+          console.error("Error fetching github emails in signIn callback", err);
+        }
+      }
+
+      // Enforce whitelist only for credentials (local) sign-ins.
+      // For OAuth providers (e.g. GitHub) allow the flow to continue.
+      if (account?.provider === "credentials") {
+        const isAllowed = await checkAllowedEmail(user.email!);
+        if (!isAllowed) return false;
+      } else {
+        // OAuth provider: allow through (do not apply credentials-only checks)
+        return true;
+      }
 
       const existingUser = await getUserById(user.id);
 
