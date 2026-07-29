@@ -13,15 +13,13 @@ export const checkBlockedEmail = async (email: string) => {
       email,
     },
   });
-  if (result) {
-    return true;
-  }
-  return false;
+  return !!result;
 };
 
-// 新增：白名单验证函数
+// 白名单验证：从环境变量读取，逗号分隔；若未配置则默认允许（可改为默认拒绝）
 export const checkAllowedEmail = async (email: string) => {
-  // 单用户模式：只允许这个邮箱
-  const allowedEmails = ['Sec.SD@2mail.co'];
-  return allowedEmails.includes(email);
+  const envList = process.env.ALLOWED_EMAILS;
+  if (!envList) return true;
+  const allowed = envList.split(",").map((e) => e.trim().toLowerCase());
+  return allowed.includes((email || "").toLowerCase());
 };
