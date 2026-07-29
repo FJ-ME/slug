@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { redirect } from "next/navigation";
 import { urlFromServer } from "@/server/middleware/redirect";
 import { cn } from "@/utils";
 import { Textarea } from "@/ui/input";
@@ -14,6 +15,12 @@ const Redirect = async ({ params }: { params: { slug: string } }) => {
 
   if (getDataApi.error) {
     return notFound();
+  }
+
+  const enableRedirect = (process.env.ENABLE_REDIRECT || "false").toLowerCase() === "true";
+
+  if (enableRedirect && getDataApi.url) {
+    redirect(getDataApi.url);
   }
 
   return (
