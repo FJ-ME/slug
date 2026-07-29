@@ -14,8 +14,19 @@ interface LinksLimitProps {
 }
 
 const LinksLimit = ({ userLinks, maxLinks }: LinksLimitProps) => {
-  const max = userLinks >= maxLinks;
-  const mid = userLinks >= maxLinks / 2;
+  // Treat maxLinks <= 0 or undefined as unlimited
+  const isUnlimited = !maxLinks || maxLinks <= 0;
+  const max = !isUnlimited && userLinks >= maxLinks;
+  const mid = !isUnlimited && userLinks >= maxLinks / 2;
+
+  const maxLabel = isUnlimited ? "∞" : maxLinks < 10 ? `0${maxLinks}` : `${maxLinks}`;
+
+  const tooltipText = isUnlimited
+    ? `You have created ${userLinks} links. (Unlimited)`
+    : max
+    ? `You have reached the maximum limit of ${maxLinks} links.`
+    : `You have created ${userLinks} out of ${maxLinks} links.`;
+
   return (
     <TooltipProvider delayDuration={500}>
       <Tooltip>
@@ -41,19 +52,13 @@ const LinksLimit = ({ userLinks, maxLinks }: LinksLimitProps) => {
               <span>
                 {userLinks < 10 ? `0${userLinks}` : userLinks}
                 {"/"}
-                {maxLinks < 10 ? `0${maxLinks}` : maxLinks}
+                {maxLabel}
               </span>
             </div>
           </div>
         </TooltipTrigger>
         <TooltipContent>
-          {max ? (
-            <p>You have reached the maximum limit of {maxLinks} links.</p>
-          ) : (
-            <p>
-              You have created {userLinks} out of {maxLinks} links.
-            </p>
-          )}
+          <p>{tooltipText}</p>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
