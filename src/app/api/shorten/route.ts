@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { prisma } from "@/server/db";
-import { generateSlug } from "@/server/utils/slug";
 import { env } from "@/env.mjs";
 
 function safeEqual(a?: string, b?: string) {
@@ -15,6 +14,17 @@ function safeEqual(a?: string, b?: string) {
     // Fallback on any error
     return false;
   }
+}
+
+// Local slug generator to avoid missing import. Generates an alphanumeric slug.
+function generateSlug(length = 6) {
+  const alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  const bytes = crypto.randomBytes(length);
+  let id = "";
+  for (let i = 0; i < length; i++) {
+    id += alphabet[bytes[i] % alphabet.length];
+  }
+  return id;
 }
 
 export async function POST(request: NextRequest) {
