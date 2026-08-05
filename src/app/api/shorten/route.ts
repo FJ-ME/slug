@@ -73,7 +73,7 @@ export async function POST(request: NextRequest) {
         });
 
         return NextResponse.json(
-          { shortUrl: `${env.NEXT_PUBLIC_APP_URL}/${link.slug}` },
+          { shortUrl: `${env.APP_URL}/${link.slug}` },
           { status: 201 },
         );
       } catch (err: any) {
