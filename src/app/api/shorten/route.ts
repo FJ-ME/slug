@@ -20,9 +20,14 @@ function safeEqual(a?: string, b?: string) {
 function generateSlug(length = 6) {
   const alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   const bytes = crypto.randomBytes(length);
+  if (bytes.length < length) {
+    throw new Error("Not enough random bytes generated");
+  }
   let id = "";
   for (let i = 0; i < length; i++) {
-    id += alphabet[bytes[i] % alphabet.length];
+    // use readUInt8 to ensure a number is returned (avoids TS 'possibly undefined')
+    const b = bytes.readUInt8(i);
+    id += alphabet[b % alphabet.length];
   }
   return id;
 }
