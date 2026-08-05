@@ -13,9 +13,13 @@ export const env = createEnv({
     TURSO_DATABASE_URL: z.string().optional(),
     TURSO_AUTH_TOKEN: z.string().optional(),
     NODE_ENV: z
-      .enum(["development", "test", "production"])
+      .enum(["development", "test", "production"]) 
       .default("development"),
     AUTH_SECRET: z.string(),
+    // New server vars used by Worker / origin:
+    CF_SIGNATURE: z.string().optional(),
+    API_KEY_SHORTEN: z.string().optional(),
+    NEXT_PUBLIC_APP_URL: z.string().optional(),
     //AUTH_URL: z.string(),
     GITHUB_ID: z.string(),
     GITHUB_CLIENT_SECRET: z.string(),
@@ -26,6 +30,10 @@ export const env = createEnv({
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
     AUTH_SECRET: process.env.AUTH_SECRET,
+    // New runtime mappings:
+    CF_SIGNATURE: process.env.CF_SIGNATURE,
+    API_KEY_SHORTEN: process.env.API_KEY_SHORTEN,
+    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     // AUTH_URL: process.env.AUTH_URL,
     GITHUB_ID: process.env.GITHUB_ID,
     GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
