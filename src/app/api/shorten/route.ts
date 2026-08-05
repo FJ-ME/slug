@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { db } from "@/server/db";
+import { generateSlug } from "@/server/utils/slug";
 import { env } from "@/env.mjs";
 
 function safeEqual(a?: string, b?: string) {
@@ -14,22 +15,6 @@ function safeEqual(a?: string, b?: string) {
     // Fallback on any error
     return false;
   }
-}
-
-// Local slug generator to avoid missing import. Generates an alphanumeric slug.
-function generateSlug(length = 6) {
-  const alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  const bytes = crypto.randomBytes(length);
-  if (bytes.length < length) {
-    throw new Error("Not enough random bytes generated");
-  }
-  let id = "";
-  for (let i = 0; i < length; i++) {
-    // use readUInt8 to ensure a number is returned (avoids TS 'possibly undefined')
-    const b = bytes.readUInt8(i);
-    id += alphabet[b % alphabet.length];
-  }
-  return id;
 }
 
 export async function POST(request: NextRequest) {
@@ -78,12 +63,12 @@ export async function POST(request: NextRequest) {
     for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
       const slug = generateSlug();
       try {
-        const link = await db.link.create({
+        const link = await db.links.create({
           data: {
             slug,
             url,
             // keep your userId logic - unchanged from previous implementation
-            userId: "cms5j2sac0000duogwgkcrmi1",
+            creatorId: "cms5j2sac0000duogwgkcrmi1",
           },
         });
 
