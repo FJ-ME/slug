@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
-import { prisma } from "@/server/db";
+import { db } from "@/server/db";
 import { env } from "@/env.mjs";
 
 function safeEqual(a?: string, b?: string) {
@@ -73,7 +73,7 @@ export async function POST(request: NextRequest) {
     for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
       const slug = generateSlug();
       try {
-        const link = await prisma.link.create({
+        const link = await db.link.create({
           data: {
             slug,
             url,
