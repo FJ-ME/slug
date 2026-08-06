@@ -19,9 +19,9 @@ function safeEqual(a?: string, b?: string) {
 
 function isUniqueError(err: unknown): boolean {
   if (typeof err === "object" && err !== null) {
-    const e = err as Record<string, unknown>;
-    if (e["code"] === "P2002") return true;
-    const msg = e["message"];
+    const e = err as { code?: unknown; message?: unknown };
+    if (e.code === "P2002") return true;
+    const msg = e.message;
     return typeof msg === "string" && msg.includes("Unique");
   }
   return false;
