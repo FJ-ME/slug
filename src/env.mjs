@@ -19,7 +19,7 @@ export const env = createEnv({
     // New server vars used by Worker / origin:
     CF_SIGNATURE: z.string().optional(),
     API_KEY_SHORTEN: z.string().optional(),
-    NEXT_PUBLIC_APP_URL: z.string().optional(),
+    APP_URL: z.string().optional(), // server key mapped from NEXT_PUBLIC_APP_URL
     //AUTH_URL: z.string(),
     GITHUB_ID: z.string(),
     GITHUB_CLIENT_SECRET: z.string(),
@@ -33,7 +33,7 @@ export const env = createEnv({
     // New runtime mappings:
     CF_SIGNATURE: process.env.CF_SIGNATURE,
     API_KEY_SHORTEN: process.env.API_KEY_SHORTEN,
-    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
+    APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     // AUTH_URL: process.env.AUTH_URL,
     GITHUB_ID: process.env.GITHUB_ID,
     GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
