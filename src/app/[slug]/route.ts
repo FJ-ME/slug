@@ -2,12 +2,16 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { db } from "@/server/db";
 
+function isPrismaNotFoundError(e: unknown): boolean {
+  if (typeof e !== "object" || e === null) return false;
+  const maybe = e as { code?: unknown; message?: unknown };
+  if (maybe.code === "P2025") return true;
+  return typeof maybe.message === "string" && maybe.message.includes("No record found");
+}
+
 export async function GET(request: NextRequest, { params }: { params: { slug: string } }) {
   const slug = params?.slug;
   if (!slug) return NextResponse.json({ error: "Missing slug" }, { status: 400 });
-
-  const isNotFoundErr = (e: unknown) =>
-    typeof e === "object" && e !== null && ((e as any).code === "P2025" || (typeof (e as any).message === "string" && (e as any).message.includes("No record found")));
 
   try {
     // Primary: try atomic increment (fast path)
@@ -20,7 +24,7 @@ export async function GET(request: NextRequest, { params }: { params: { slug: st
     if (!updated?.url) return NextResponse.json({ error: "Not found" }, { status: 404 });
     return NextResponse.redirect(updated.url, 302);
   } catch (err: unknown) {
-    if (isNotFoundErr(err)) {
+    if (isPrismaNotFoundError(err)) {
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
 
