@@ -30,6 +30,10 @@ export async function GET(request: NextRequest, { params }: { params: { slug: st
 
     // Fallback: transaction-based find + update (compatible)
     try {
+      // Log that we're using the fallback path so we can monitor adapter compatibility in production.
+      // Avoid logging secrets; only log slug and timestamp.
+      console.warn("Shorten: fallback to transaction for slug", slug, { time: new Date().toISOString() });
+
       const result = await db.$transaction(async (tx) => {
         const row = await tx.links.findUnique({ where: { slug }, select: { id: true, url: true, clicks: true } });
         if (!row) throw new Error("NOT_FOUND_IN_TX");
@@ -37,6 +41,8 @@ export async function GET(request: NextRequest, { params }: { params: { slug: st
         return row.url;
       });
 
+      // Log successful fallback handling for observability
+      console.info("Shorten: fallback transaction succeeded for slug", slug);
       return NextResponse.redirect(result, 302);
     } catch (txErr: unknown) {
       console.error("Redirect/lookup error (primary and fallback failed)", { err, txErr });
