@@ -19,7 +19,7 @@
     "db:studio": "prisma studio",
     "db:push": "node ./scripts/sync-turso-db.mjs 20260726082533_init",
     "db:pscale:dump": "pscale database dump databasename databasebranch",
-    "db:turso:dump": "turso db shell $(node -e \"const u=process.env.TURSO_DATABASE_URL||''; const h=u.match(/https?:\\/\\/([^/]+)/); console.log(h? h[1].replace(/\\.turso\\.io$/, '') : '');\") .dump > dump.sql"
+    "db:turso:dump": "turso db shell $(node -e \"const u=process.env.TURSO_DATABASE_URL||''; const h=u.match(/https?:\\/\\/([^/]+)/); console.log(h? h[1].replace(/\\.turso\\.io$/, '') : '');\") .d..."
   },
   "dependencies": {
     "@auth/core": "0.30.0",
@@ -76,7 +76,7 @@
     "postcss": "8.4.38",
     "prettier": "3.2.5",
     "prettier-plugin-tailwindcss": "0.5.13",
-    "prisma": "5.12.0",
+    "prisma": "5.13.0",
     "tailwindcss": "3.4.3",
     "typescript": "5.4.3"
   },
