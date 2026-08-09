@@ -20,6 +20,8 @@ export const env = createEnv({
     CF_SIGNATURE: z.string().optional(),
     API_KEY_SHORTEN: z.string().optional(),
     APP_URL: z.string().optional(), // server key mapped from NEXT_PUBLIC_APP_URL
+    SLUG_LENGTH: z.string().optional(), // optional, coerced to number in code
+    CREATOR_ID: z.string().optional(), // single-user id for created links
     //AUTH_URL: z.string(),
     GITHUB_ID: z.string(),
     GITHUB_CLIENT_SECRET: z.string(),
@@ -34,6 +36,8 @@ export const env = createEnv({
     CF_SIGNATURE: process.env.CF_SIGNATURE,
     API_KEY_SHORTEN: process.env.API_KEY_SHORTEN,
     APP_URL: process.env.NEXT_PUBLIC_APP_URL,
+    SLUG_LENGTH: process.env.SLUG_LENGTH,
+    CREATOR_ID: process.env.CREATOR_ID,
     // AUTH_URL: process.env.AUTH_URL,
     GITHUB_ID: process.env.GITHUB_ID,
     GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
